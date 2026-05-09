@@ -1,49 +1,58 @@
 // Arcade Hub - Game Logic
 
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const gameArea = document.getElementById('gameArea');
-const currentGameTitle = document.getElementById('currentGameTitle');
-const gameInstructions = document.getElementById('gameInstructions');
-const resetBtn = document.getElementById('resetBtn');
-const gameCards = document.querySelectorAll('.game-card');
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[Arcade Hub] Initializing...');
 
-let currentGame = null;
-let gameLoop = null;
-let gameState = {};
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameArea = document.getElementById('gameArea');
+    const currentGameTitle = document.getElementById('currentGameTitle');
+    const gameInstructions = document.getElementById('gameInstructions');
+    const resetBtn = document.getElementById('resetBtn');
+    const gameCards = document.querySelectorAll('.game-card');
 
-// Game selection - handle both card and button clicks
-gameCards.forEach(card => {
-    card.addEventListener('click', (e) => {
-        // Prevent any default button behavior
-        if (e.target.tagName === 'BUTTON') {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        const game = card.dataset.game;
-        loadGame(game);
-    });
-});
+    let currentGame = null;
+    let gameLoop = null;
+    let gameState = {};
 
-// Also attach listeners directly to play buttons for reliability
-const playButtons = document.querySelectorAll('.play-btn');
-playButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const card = btn.closest('.game-card');
-        if (card) {
+    console.log('[Arcade Hub] Found ' + gameCards.length + ' game cards');
+
+    // Game selection - handle both card and button clicks
+    gameCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            console.log('[Arcade Hub] Card clicked:', card.dataset.game);
+            // Prevent any default button behavior
+            if (e.target.tagName === 'BUTTON') {
+                e.preventDefault();
+                e.stopPropagation();
+            }
             const game = card.dataset.game;
             loadGame(game);
+        });
+    });
+
+    // Also attach listeners directly to play buttons for reliability
+    const playButtons = document.querySelectorAll('.play-btn');
+    console.log('[Arcade Hub] Found ' + playButtons.length + ' play buttons');
+    playButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            console.log('[Arcade Hub] Button clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            const card = btn.closest('.game-card');
+            if (card) {
+                const game = card.dataset.game;
+                console.log('[Arcade Hub] Loading game:', game);
+                loadGame(game);
+            }
+        });
+    });
+
+    resetBtn.addEventListener('click', () => {
+        if (currentGame) {
+            loadGame(currentGame);
         }
     });
-});
-
-resetBtn.addEventListener('click', () => {
-    if (currentGame) {
-        loadGame(currentGame);
-    }
-});
 
 function loadGame(game) {
     // Clear any existing game loop
@@ -380,3 +389,5 @@ function initClicker() {
 
     drawClicker();
 }
+
+}); // End DOMContentLoaded
