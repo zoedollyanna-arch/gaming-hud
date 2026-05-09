@@ -12,11 +12,30 @@ let currentGame = null;
 let gameLoop = null;
 let gameState = {};
 
-// Game selection
+// Game selection - handle both card and button clicks
 gameCards.forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+        // Prevent any default button behavior
+        if (e.target.tagName === 'BUTTON') {
+            e.preventDefault();
+            e.stopPropagation();
+        }
         const game = card.dataset.game;
         loadGame(game);
+    });
+});
+
+// Also attach listeners directly to play buttons for reliability
+const playButtons = document.querySelectorAll('.play-btn');
+playButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const card = btn.closest('.game-card');
+        if (card) {
+            const game = card.dataset.game;
+            loadGame(game);
+        }
     });
 });
 
